@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Snap!</title>
+
+  <style>
+    body {
+      margin-top: 250px;
+      text-align: center;
+      background: url(http://www.qantas.com.au/img/campaigns/2013/destination/south-africa/south-africa-background.jpg) no-repeat center center fixed;
+      -webkit-background-size: cover; /* For WebKit*/
+      -moz-background-size: cover;    /* Mozilla*/
+      -o-background-size: cover;      /* Opera*/
+      background-size: cover;         /* Generic*/
+      background-size: cover;
+      background-position: center;
+      color: white;
+      font-family: futura;
+    }
+
+    .wrapper {
+      display: table-cell;
+      width: 200px;
+      height: 150px;
+      text-align: center;
+      vertical-align: middle;
+      border: 1px dotted #656565;
+    }
+
+    p {
+      margin-left: 40px;
+      padding-left: 10px;
+      margin-right: 40px;
+      padding-left: 10px;
+    }
+
+    h1 { 
+      text-align: center;
+    }
+
+    h3 {
+      color: orange;
+    }
+
+    footer {
+      padding-top: 20px;
+      font-size: medium;
+    }
+
+  </style>
+ 
+</head>
+<body>
+  <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
+  <div class="main">
+   
+    <h1>Get ready to snap!</h1>
+
+    <h2>How does it work?</h2>
+    <p>The deck gets divided between the two players. Each player has a hand of cards face-down. Take turns putting the top card from your deck face-up on a pile on the table. If the top two cards' ranks match, SNAP! The first one to call snap gets the pile. When you are out of cards, you lose.</p>
+
+    <h3>Ready to play?</h3>
+
+
+      <input type="button" id="theGame()" value="Click me">
+
+      <section>
+
+      <p id="play"></p>
+
+    <footer>By: Chantel Frizzell <br> Code Fellows Foundations 1</footer>
+
+  </div>
+
+
+  <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script>
+    //create a new class: Card
+    function Card(rank, suit) {
+      //create new cards
+      this.rank = rank;
+      this.suit = suit;
+      this.show = function() {
+        console.log(this.rank + " of " + this.suit);
+      }
+    }
+
+    //create a new class: Deck
+    function Deck() {
+      var rank = rank;
+      var suit = suit; 
+      this.cards = [];
+      this.count = function() {
+        return this.cards.length;
+      }
+      this.init = function() {
+        //create 4 suits
+        for (suit = 1; suit <= 4; suit++) {
+          //create 13 ranks 
+          for (rank = 1; rank <= 13; rank++) {
+            this.cards.push(new Card(rank,suit));
+          }
+        }  
+      }
+      this.deal = function(player1, player2) {
+        //as long as there are cards in Deck array, 
+        while(this.count() > 0) {
+
+          //grab a card at random from the Deck array and push it into a player's hand array. 
+          var index = Math.floor(Math.random() * this.count());
+          var randomCard = this.cards.splice(index,1)
+
+          player1.hand.push(randomCard[0])
+          console.log(randomCard[0])
+
+          index = Math.floor(Math.random() * this.count());
+          randomCard = this.cards.splice(index,1)  
+
+          player2.hand.push(randomCard[0])
+          console.log(randomCard[0])
+        }
+      }
+    }
+
+    //create a new class: Player
+    function Player(name, speed, hand) {
+          this.name = name;
+          this.hand = [];
+    }
+
+    function Game() {
+      this.pile = [];
+      this.p1;
+      this.p2;
+      this.init = function() {
+        var theDeck = new Deck();
+        theDeck.init();
+
+        theDeck.cards[0].show();
+        
+        this.p1 = new Player((prompt("But first, what is your name?")), []);
+        
+        this.p2 = new Player("Chantel", []);
+
+        theDeck.deal(this.p1,this.p2);
+      }
+      this.count = function() {
+        return this.pile.length
+      }
+      this.play = function() {
+        var rank = rank
+        var p1 = this.p1; 
+        var p2 = this.p2;
+        var rounds = 0
+        var p1Card = p1.hand.shift()
+        var p2Card = p2.hand.shift()
+        
+        while(p1.hand.length > 0 && p2.hand.length > 0 && p1Card.rank !== p2Card.rank) {
+
+          p1Card = p1.hand.shift()
+          p2Card = p2.hand.shift()
+
+          this.pile.push(p1Card);
+          this.pile.push(p2Card);
+          console.log(p1Card.rank + ", " + p2Card.rank);
+        }
+
+          
+          //if the cards' ranks match, players have to snap at the cards. The fastest one wins 
+        if(p1Card.rank == p2Card.rank) {
+          alert("SNAP!")
+
+          var speed = Math.floor(Math.random() * 10);
+
+          if(speed <= 5) {
+            alert(p1.name + " is the winner");
+            //add the pile to the p1's hand. 
+            p1.hand = p1.hand.concat(this.pile);
+          }
+          else {
+            alert(p2.name + " is the winner");
+            //add the pile to p2's hand.
+            p2.hand = p2.hand.concat(this.pile);
+          }  
+        }
+        else {
+          alert("We've got a tie!")
+        }  
+      }
+    } 
+      
+    var theGame = new Game(); 
+    theGame.init()
+    theGame.play() 
+
+    // $(document).ready(function(){
+    //   $("#play").click(function() {
+    //     //$("speed").theGame;
+    //     $(this).attr("disabled", false);
+    //     $(this).val("No more clicking");
+
+    </script>
+
+</body>
+</html>
